@@ -11,6 +11,34 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+#------------------
+#JSON API ENDPOINTS
+#------------------
+
+@app.route('/makes/JSON')
+def showMakesJSON():
+    makes = session.query(Make).all()
+    return jsonify(AllMakes=[m.serialize for m in makes])
+
+@app.route('/makes/<int:make_id>/JSON')
+def showOneMakeJSON(make_id):
+    oneMake = session.query(Make).filter_by(id=make_id).one()
+    return jsonify(Make=[oneMake.serialize])
+
+@app.route('/make/<int:make_id>/model/JSON')
+def showMakeModelsJSON(make_id):
+    models = session.query(Model).filter_by(make_id=make_id).all()
+    return jsonify(AllModels=[m.serialize for m in models])
+
+@app.route('/make/<int:make_id>/model/<int:model_id>/JSON')
+def showOneModelJSON(make_id, model_id):
+    model = session.query(Model).filter_by(id=model_id).one()
+    return jsonify(oneModel=model.serialize)
+
+#--------------------
+#CRUD FUNCTIONALITIES
+#--------------------
+
 #Home/Root routing to show all car makes
 @app.route('/')
 @app.route('/makes')
@@ -62,7 +90,7 @@ def deleteMake(make_id):
     else:
         return render_template('deleteMake.html', make = makeToDelete)
     
-
+#Show all the models of a specific make
 @app.route('/make/<int:make_id>/model')
 def showMakeModels(make_id):
     make = session.query(Make).filter_by(id=make_id).one()

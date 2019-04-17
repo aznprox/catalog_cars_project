@@ -25,6 +25,16 @@ class Make(Base):
     id = Column(
     Integer, primary_key = True)
 
+    @property
+    def serialize(self):
+
+        return {
+            'name': self.name,
+            'description': self.description,
+            'id': self.id,
+            'image': self.image,
+        }
+
 class Model(Base):
     __tablename__ = 'model'
 
@@ -47,9 +57,7 @@ class Model(Base):
     Integer, ForeignKey('make.id'))
 
     make = relationship(Make)
-
-# We added this serialize function to be able to send JSON objects in a
-# serializable format
+    
     @property
     def serialize(self):
 
