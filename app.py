@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Make, Model
@@ -58,6 +58,7 @@ def newMake():
      
         session.add(newMake)
         session.commit()
+        flash("NEW MAKE ADDED!")
         return redirect(url_for('showMakeMenu'))
     else:
         return render_template('newMake.html')
@@ -75,6 +76,7 @@ def editMake(make_id):
             editedMake.description = request.form['description']
         session.add(editedMake)
         session.commit()
+        flash("A MAKE WAS EDITED!")
         return redirect(url_for('showMakeMenu'))
     else:
         return render_template('editMake.html', make_id=make_id, beingEditedMake = editedMake)
@@ -86,6 +88,7 @@ def deleteMake(make_id):
     if request.method == 'POST':
         session.delete(makeToDelete)
         session.commit()
+        flash("A MAKE WAS DELETED!")
         return redirect(url_for('showMakeMenu'))
     else:
         return render_template('deleteMake.html', make = makeToDelete)
@@ -110,6 +113,7 @@ def addMakeModels(make_id):
         )
         session.add(newModel)
         session.commit()
+        flash("A NEW MODEL WAS ADDED!")
         return redirect(url_for('showMakeModels', make_id = make_id))
     else:
         return render_template('newModel.html', make_id = make_id)
@@ -129,6 +133,7 @@ def editMakeModels(make_id, model_id):
             editedModel.image = request.form['image']
         session.add(editedModel)
         session.commit()
+        flash("AN EXISIT MODEL WAS EDITIED!")
         return redirect(url_for('showMakeModels', make_id = make_id))
     else:
         return render_template('editModel.html',make_id=make_id, model_id = model_id, model = editedModel)
@@ -140,6 +145,7 @@ def deleteMakeModels(make_id, model_id):
     if request.method == 'POST':
         session.delete(deleteModel)
         session.commit()
+        flash("A MODEL WAS DELETED!")
         return redirect(url_for('showMakeModels', make_id = make_id))
     else:
         return render_template('deleteModel.html', model = deleteModel)
@@ -147,5 +153,6 @@ def deleteMakeModels(make_id, model_id):
 
 #Tells app to run on localhost:8000
 if __name__ == '__main__':
+    app.secret_key = 'super-secret-key'
     app.debug = True
     app.run(host='0.0.0.0', port=8000)
