@@ -16,6 +16,9 @@ class Make(Base):
     name = Column(
     String(80), nullable = False)
 
+    description = Column(
+    String(250))
+
     image = Column(
     String(80), nullable = False)
 

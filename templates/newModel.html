@@ -4,26 +4,27 @@
 	</head>
 <body>
 
-<h1>New Automobile Make</h1>
+<h1>New Make Model</h1>
 
 <div class = 'pane'>
-<form action="{{ url_for('newMake')}}" method = 'post'>
+<form action="{{ url_for('addMakeModels', make_id = make_id )}}" method = 'post'>
 
 <dl>
 	<dt>Name:</dt>
 		<dd><input type ='text' size='30' name='name'></dd>
 	<dt>Description:</dt>
 		<dd><textarea name = 'description' rows='5' cols='40' > </textarea></dd>
-	<dt>IMAGE URL:</dt>
-		<dd><input type = 'text' size = '90' name='image'></dd>
-
+	<dt>Price:</dt>
+        <dd><input type = 'text' size = '8' name='price'></dd>
+    <dt>Image:</dt>
+    <dd><input type = 'text' size = '60' name='image'></dd>
+	
 </dl>
 
 
 <input type='submit' value='Create'>
 <br>
-<br>
-<a href='/'>Cancel</a>
+<a href = "{{url_for('showMakeModels', make_id = make_id)}}">Cancel</a>
 
 </form>
 </div>

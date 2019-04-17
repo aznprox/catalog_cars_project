@@ -1,0 +1,70 @@
+<html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+	<body>
+	<div class = 'pane'>
+		<div class = 'header'>
+		<h1>{{ make.name }}</h1>
+	</div>
+
+	<a href = "{{url_for('addMakeModels', make_id = make_id)}}">Create Model</a>
+
+
+<div class = 'flash'>
+		      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+</div>
+
+
+		{% for m in models %}
+    <div class = 'nameAndPrice'>
+		<span class = 'name'><p>{{m.name}}</p></span>
+
+		<span class = 'price'>
+
+
+		<p>{{m.price}} </p>
+	</span>
+	</div>
+
+	
+	
+	<div class = 'description'>
+		<p>{{m.description}}</p>
+	</div>
+
+	
+	
+	<div class = "editdeletepane">
+
+	<a href="{{url_for('editMakeModels', make_id = make.id, model_id = m.id)}}" >Edit</a>
+	<a href="{{url_for('deleteMakeModels', make_id = make.id, model_id = m.id)}}">Delete</a>
+	</div>
+
+
+
+
+		{% endfor %}
+
+
+		
+		
+
+</div>
+</div>
+	</body>
+
+
+
+
+</html>

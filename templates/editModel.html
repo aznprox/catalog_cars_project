@@ -1,0 +1,29 @@
+<html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+	<body>
+
+<h1> Edit {{model.name}} Model</h1>
+
+<form action="{{ url_for('editMakeModels',make_id = make_id, model_id=model.id)}}" method = 'post'>
+
+<dl>
+	<dt>Name:</dt>
+		<dd><input type ='text' size='30' name='name' placeholder ='{{model.name}}'></dd>
+	<dt>Description:</dt>
+		<dd><textarea name = 'description' rows='5' cols='40'  placeholder ='{{model.description}}'> </textarea></dd>
+	<dt>Price:</dt>
+        <dd><input type = 'text' size = '8' name='price' placeholder ='{{model.price}}'></dd>
+    <dt>Image:</dt>
+    <dd><input type = 'text' size = '60' name='image' placeholder ='{{model.image}}'></dd>
+
+</dl>
+
+
+<input type='submit' value='Edit'>
+<br>
+<a href = "{{url_for('showMakeModels', make_id = make_id)}}"> Cancel </a>
+</form>
+</body>
+</html>

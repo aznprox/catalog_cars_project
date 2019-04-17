@@ -6,16 +6,20 @@
 
 <h1>Makes</h1>
 
+<br>
+<a href="{{url_for('newMake')}}">CREATE NEW CAR MAKE</a>
+<br>
+
 <div class = 'pane'>
 {% for make in makes %}
 
 <div>
 
-<a href = "#"> <h3>{{make.name}}</h3></a>
+<a href = "{{url_for('showMakeModels', make_id = make.id)}}"> <h3>{{make.name}}</h3></a>
 
-<p><a href = "#" >Edit Make</a></p>
+<p><a href = "{{url_for('editMake', make_id = make.id)}}" >Edit Make</a></p>
 
-<p> <a href = "#">Delete Make</a> </p>
+<p> <a href = "{{url_for('deleteMake', make_id = make.id)}}">Delete Make</a> </p>
 
 </div>
 

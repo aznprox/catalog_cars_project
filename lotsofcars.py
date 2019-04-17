@@ -20,7 +20,7 @@ session = DBSession()
 
 #Acura Car Make
 
-make1 = Make(name='Acura', image='https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Acura_logo.svg/1200px-Acura_logo.svg.png')
+make1 = Make(name='Acura', description='Acura is the American luxury vehicle marque of Japanese automaker Honda. The brand was launched in the United States and Canada on 27 March 1986, marketing luxury, performance, and high-performance vehicles.', image='https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Acura_logo.svg/1200px-Acura_logo.svg.png')
 
 session.add(make1)
 session.commit()
