@@ -308,6 +308,7 @@ def newMake():
         return redirect('/login')
     if request.method == 'POST':
         newMake = Make(
+        user_id=login_session['user_id'],
         name=request.form['name'], 
         image=request.form['image'],
         description=request.form['description'])
@@ -325,6 +326,9 @@ def editMake(make_id):
     editedMake = session.query(Make).filter_by(id=make_id).one()
     if 'username' not in login_session:
         return redirect('/login')
+    if editedMake.user_id != login_session['user_id']:
+        flash("You are not authroized to edit this")
+        return redirect(url_for('showMakeMenu'))  
     if request.method =='POST':
         if request.form['name']:
             editedMake.name = request.form['name']
@@ -345,6 +349,9 @@ def deleteMake(make_id):
     makeToDelete = session.query(Make).filter_by(id=make_id).one()
     if 'username' not in login_session:
         return redirect('/login')
+    if makeToDelete.user_id != login_session['user_id']:
+        flash("You are not authroized to delete this")
+        return redirect(url_for('showMakeMenu'))       
     if request.method == 'POST':
         session.delete(makeToDelete)
         session.commit()
@@ -372,8 +379,13 @@ def showMakeModelOne(make_id, model_id):
 def addMakeModels(make_id):
     if 'username' not in login_session:
         return redirect('/login')
+    make = session.query(Make).filter_by(id=make_id).one()
+    if make.user_id != login_session['user_id']:
+        flash("You are not authroized to add a new model to this make")
+        return redirect(url_for('showMakeModels', make_id = make_id)) 
     if request.method == 'POST':
         newModel = Model(
+            user_id=login_session['user_id'],
             name=request.form['name'],
             image=request.form['image'],
             description=request.form['description'],
@@ -393,6 +405,9 @@ def editMakeModels(make_id, model_id):
     editedModel = session.query(Model).filter_by(id=model_id).one()
     if 'username' not in login_session:
         return redirect('/login')
+    if editedModel.user_id != login_session['user_id']:
+        flash("You are not authroized to edit this")
+        return redirect(url_for('showMakeModels', make_id = make_id))  
     if request.method == 'POST':
         if request.form['name']:
             editedModel.name = request.form['name']
@@ -415,6 +430,9 @@ def deleteMakeModels(make_id, model_id):
     deleteModel = session.query(Model).filter_by(id=model_id).one()
     if 'username' not in login_session:
         return redirect('/login')
+    if deleteModel.user_id != login_session['user_id']:
+        flash("You are not authroized to delete this")
+        return redirect(url_for('showMakeModels', make_id = make_id))
     if request.method == 'POST':
         session.delete(deleteModel)
         session.commit()
