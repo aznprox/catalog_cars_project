@@ -1,36 +1,36 @@
-<html>
-<head>
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-	</head>
-<body>
-
+{% extends "main.html" %}
+{% block title %}newMake{% endblock %}
+{% block content %}
 <h1>New Automobile Make</h1>
 
-<div class = 'pane'>
+<div class = 'row'>
 <form action="{{ url_for('newMake')}}" method = 'post'>
 
-<dl>
-	<dt>Name:</dt>
-		<dd><input type ='text' size='30' name='name'></dd>
-	<dt>Description:</dt>
-		<dd><textarea name = 'description' rows='5' cols='40' > </textarea></dd>
-	<dt>IMAGE URL:</dt>
-		<dd><input type = 'text' size = '90' name='image'></dd>
-
-</dl>
-
-
-<input type='submit' value='Create'>
-<br>
-<br>
-<a href='/'>Cancel</a>
-
+        <div class="input-field col s6">
+				<input name='name' id="name" type="text" class="validate">
+				<label for="name">Name:</label>
+			</div>
+			
+			<div class="input-field col s12">
+				<textarea name ='description' id="textarea1" class="materialize-textarea"></textarea>
+				<label for="textarea1">Description:</label>
+			</div>
+	
+			<div class="input-field col s6">
+				<input name='image' id="image-url" type="text" class="validate">
+				<label for="image-url">IMAGE URL:</label>
+			</div>
+	 
+						
+			<div class="col s12">
+			<button class="btn waves-effect waves-light light-blue accent-3" type="submit" name="action" value='create'>Create
+					<i class="material-icons right">send</i>
+			</button>
+			</div>
+		
+			<div class="col s12 cancel">
+			<a href = "{{url_for('showMakeMenu')}}" class="waves-effect waves-light btn-small light-blue accent-3">Cancel</a>
+			</div>
 </form>
 </div>
-
-</body>
-
-
-
-
-</html>
+{% endblock %}
