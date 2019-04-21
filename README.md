@@ -45,10 +45,10 @@ templating language:
 * `selections.html` - A page that shows all the models of a specific make.
 
 ## How to Run the Project
-After you have downloaded and unzipped the vagrant Environment](https://github.com/udacity/fullstack-nanodegree-vm/archive/master.zip) file. 
+After you have downloaded and unzipped the vagrant [Environment](https://github.com/udacity/fullstack-nanodegree-vm/archive/master.zip) file. 
 
 Download the project zip file to you computer and unzip the file. Or clone this
-repository into the vagrant directory.
+repository into the vagrant directory of the vagrant environment.
 
 Open the text-based interface for your operating system (e.g. the terminal
 window in Linux, the command prompt in Windows).
