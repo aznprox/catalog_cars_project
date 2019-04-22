@@ -77,8 +77,7 @@ cd /vagrant/
 ```
 
 ### Run application.py
-On the first run of `lotsofcars.py` there will be no database present, so it creates
-one and populates it with sample data. Type this into the command line:
+On the first run of the application there will be no database present, so to create one populates it with sample data. Type this into the command line:
 
 ```bash
 python lotsofcars.py
