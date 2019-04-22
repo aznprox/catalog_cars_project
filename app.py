@@ -20,7 +20,10 @@ CLIENT_ID = json.loads(
 APPLICATION_NAME = "Catalog Car Application"
 
 # Connect to Database and create database session
-engine = create_engine('sqlite:///carmake.db', connect_args={'check_same_thread':False})
+engine = create_engine(
+    'sqlite:///carmake.db',
+    connect_args={
+        'check_same_thread': False})
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -89,8 +92,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(
+            json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -112,7 +115,7 @@ def gconnect():
     login_session['provider'] = 'google'
     for allinfo in login_session:
         print allinfo
-    
+
     # see if user exists, if it doesn't make a new one
     user_id = getUserID(data["email"])
     if not user_id:
@@ -151,9 +154,13 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(
+            json.dumps(
+                'Failed to revoke token for given user.',
+                400))
         response.headers['Content-Type'] = 'application/json'
         return response
+
 
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
@@ -164,7 +171,6 @@ def fbconnect():
     access_token = request.data
     print "access token received %s " % access_token
 
-
     app_id = json.loads(open('fb_client_secrets.json', 'r').read())[
         'web']['app_id']
     app_secret = json.loads(
@@ -173,7 +179,6 @@ def fbconnect():
         app_id, app_secret, access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
-
 
     # Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v3.2/me"
@@ -232,11 +237,12 @@ def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
+    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
+        facebook_id, access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
     return "you have been logged out"
-    
+
 # User Helper Functions
 
 
@@ -258,61 +264,67 @@ def getUserID(email):
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
-    except:
+    except BaseException:
         return None
 
 
-#------------------
-#JSON API ENDPOINTS
-#------------------
+# ------------------
+# JSON API ENDPOINTS
+# ------------------
 
 @app.route('/makes/JSON')
 def showMakesJSON():
     makes = session.query(Make).all()
     return jsonify(AllMakes=[m.serialize for m in makes])
 
+
 @app.route('/makes/<int:make_id>/JSON')
 def showOneMakeJSON(make_id):
     oneMake = session.query(Make).filter_by(id=make_id).one()
     return jsonify(Make=[oneMake.serialize])
+
 
 @app.route('/make/<int:make_id>/model/JSON')
 def showMakeModelsJSON(make_id):
     models = session.query(Model).filter_by(make_id=make_id).all()
     return jsonify(AllModels=[m.serialize for m in models])
 
+
 @app.route('/make/<int:make_id>/model/<int:model_id>/JSON')
 def showOneModelJSON(make_id, model_id):
     model = session.query(Model).filter_by(id=model_id).one()
     return jsonify(oneModel=model.serialize)
 
-#--------------------
-#CRUD FUNCTIONALITIES
-#--------------------
+# --------------------
+# CRUD FUNCTIONALITIES
+# --------------------
 
-#Home/Root routing to show all car makes
+# Home/Root routing to show all car makes
 @app.route('/')
 @app.route('/makes')
 def showMakeMenu():
     makes = session.query(Make).all()
     if 'username' not in login_session:
-        return render_template('makes.html', makes = makes)
+        return render_template('makes.html', makes=makes)
     else:
         latestModels = session.query(Model).order_by(Model.id.desc())[0:3]
-        return render_template('latestCars.html', makes = makes, models = latestModels)
+        return render_template(
+            'latestCars.html',
+            makes=makes,
+            models=latestModels)
 
-#Create a new automobile make
+# Create a new automobile make
 @app.route('/makes/new', methods=['GET', 'POST'])
 def newMake():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
         newMake = Make(
-        user_id=login_session['user_id'],
-        name=request.form['name'], 
-        image=request.form['image'],
-        description=request.form['description'])
-     
+            user_id=login_session['user_id'],
+            name=request.form['name'],
+            image=request.form['image'],
+            description=request.form['description'])
+
         session.add(newMake)
         session.commit()
         flash("NEW MAKE ADDED!")
@@ -320,7 +332,7 @@ def newMake():
     else:
         return render_template('newMake.html')
 
-#Edit an existing car make
+# Edit an existing car make
 @app.route('/makes/<int:make_id>/edit', methods=['GET', 'POST'])
 def editMake(make_id):
     editedMake = session.query(Make).filter_by(id=make_id).one()
@@ -328,8 +340,8 @@ def editMake(make_id):
         return redirect('/login')
     if editedMake.user_id != login_session['user_id']:
         flash("You are not authroized to edit this")
-        return redirect(url_for('showMakeMenu'))  
-    if request.method =='POST':
+        return redirect(url_for('showMakeMenu'))
+    if request.method == 'POST':
         if request.form['name']:
             editedMake.name = request.form['name']
         if request.form['image']:
@@ -341,9 +353,12 @@ def editMake(make_id):
         flash("A MAKE WAS EDITED!")
         return redirect(url_for('showMakeMenu'))
     else:
-        return render_template('editMake.html', make_id=make_id, beingEditedMake = editedMake)
+        return render_template(
+            'editMake.html',
+            make_id=make_id,
+            beingEditedMake=editedMake)
 
-#Delete an existing car make
+# Delete an existing car make
 @app.route('/makes/<int:make_id>/delete', methods=['GET', 'POST'])
 def deleteMake(make_id):
     makeToDelete = session.query(Make).filter_by(id=make_id).one()
@@ -351,30 +366,34 @@ def deleteMake(make_id):
         return redirect('/login')
     if makeToDelete.user_id != login_session['user_id']:
         flash("You are not authroized to delete this")
-        return redirect(url_for('showMakeMenu'))       
+        return redirect(url_for('showMakeMenu'))
     if request.method == 'POST':
         session.delete(makeToDelete)
         session.commit()
         flash("A MAKE WAS DELETED!")
         return redirect(url_for('showMakeMenu'))
     else:
-        return render_template('deleteMake.html', make = makeToDelete)
-    
-#Show all the models of a specific make
+        return render_template('deleteMake.html', make=makeToDelete)
+
+# Show all the models of a specific make
 @app.route('/make/<int:make_id>/')
 @app.route('/make/<int:make_id>/model')
 def showMakeModels(make_id):
     make = session.query(Make).filter_by(id=make_id).one()
     models = session.query(Model).filter_by(make_id=make_id)
-    return render_template('selections.html', make_id = make_id, models=models, make=make)
+    return render_template(
+        'selections.html',
+        make_id=make_id,
+        models=models,
+        make=make)
 
-#Show information of a specific make/model
+# Show information of a specific make/model
 @app.route('/make/<int:make_id>/model/<int:model_id>/')
 def showMakeModelOne(make_id, model_id):
     oneModel = session.query(Model).filter_by(id=model_id)
-    return render_template('oneModel.html', make_id = make_id, models=oneModel)
+    return render_template('oneModel.html', make_id=make_id, models=oneModel)
 
-#Add a new model based on make_id
+# Add a new model based on make_id
 @app.route('/make/<int:make_id>/model/new', methods=['GET', 'POST'])
 def addMakeModels(make_id):
     if 'username' not in login_session:
@@ -382,7 +401,7 @@ def addMakeModels(make_id):
     make = session.query(Make).filter_by(id=make_id).one()
     if make.user_id != login_session['user_id']:
         flash("You are not authroized to add a new model to this make")
-        return redirect(url_for('showMakeModels', make_id = make_id)) 
+        return redirect(url_for('showMakeModels', make_id=make_id))
     if request.method == 'POST':
         newModel = Model(
             user_id=login_session['user_id'],
@@ -395,19 +414,25 @@ def addMakeModels(make_id):
         session.add(newModel)
         session.commit()
         flash("A NEW MODEL WAS ADDED!")
-        return redirect(url_for('showMakeModels', make_id = make_id))
+        return redirect(url_for('showMakeModels', make_id=make_id))
     else:
-        return render_template('newModel.html', make_id = make_id)
+        return render_template('newModel.html', make_id=make_id)
 
-#Edit an existing model based on model_id
-@app.route('/make/<int:make_id>/model/<int:model_id>/edit', methods =['GET', 'POST'])
+# Edit an existing model based on model_id
+
+
+@app.route(
+    '/make/<int:make_id>/model/<int:model_id>/edit',
+    methods=[
+        'GET',
+        'POST'])
 def editMakeModels(make_id, model_id):
     editedModel = session.query(Model).filter_by(id=model_id).one()
     if 'username' not in login_session:
         return redirect('/login')
     if editedModel.user_id != login_session['user_id']:
         flash("You are not authroized to edit this")
-        return redirect(url_for('showMakeModels', make_id = make_id))  
+        return redirect(url_for('showMakeModels', make_id=make_id))
     if request.method == 'POST':
         if request.form['name']:
             editedModel.name = request.form['name']
@@ -420,26 +445,36 @@ def editMakeModels(make_id, model_id):
         session.add(editedModel)
         session.commit()
         flash("A MODEL WAS EDITIED!")
-        return redirect(url_for('showMakeModels', make_id = make_id))
+        return redirect(url_for('showMakeModels', make_id=make_id))
     else:
-        return render_template('editModel.html',make_id=make_id, model_id = model_id, model = editedModel)
+        return render_template(
+            'editModel.html',
+            make_id=make_id,
+            model_id=model_id,
+            model=editedModel)
 
-#Delete an existing model based on model_id
-@app.route('/make/<int:make_id>/model/<int:model_id>/delete', methods =['GET', 'POST'])
+# Delete an existing model based on model_id
+
+
+@app.route(
+    '/make/<int:make_id>/model/<int:model_id>/delete',
+    methods=[
+        'GET',
+        'POST'])
 def deleteMakeModels(make_id, model_id):
     deleteModel = session.query(Model).filter_by(id=model_id).one()
     if 'username' not in login_session:
         return redirect('/login')
     if deleteModel.user_id != login_session['user_id']:
         flash("You are not authroized to delete this")
-        return redirect(url_for('showMakeModels', make_id = make_id))
+        return redirect(url_for('showMakeModels', make_id=make_id))
     if request.method == 'POST':
         session.delete(deleteModel)
         session.commit()
         flash("A MODEL WAS DELETED!")
-        return redirect(url_for('showMakeModels', make_id = make_id))
+        return redirect(url_for('showMakeModels', make_id=make_id))
     else:
-        return render_template('deleteModel.html', model = deleteModel)
+        return render_template('deleteModel.html', model=deleteModel)
 
 # Disconnect based on provider
 @app.route('/disconnect')
@@ -463,7 +498,8 @@ def disconnect():
         flash("You were not logged in")
         return redirect(url_for('showMakeMenu'))
 
-#Tells app to run on localhost:8000
+
+# Tells app to run on localhost:8000
 if __name__ == '__main__':
     app.secret_key = 'super-secret-key'
     app.debug = True

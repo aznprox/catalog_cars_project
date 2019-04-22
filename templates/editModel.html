@@ -7,22 +7,22 @@
 <form action="{{ url_for('editMakeModels',make_id = make_id, model_id=model.id)}}" method = 'post'>
 
 		<div class="input-field col s6">
-				<input name='name' id="name" type="text" class="validate" placeholder ='{{model.name}}'>
+				<input name='name' id="name" type="text" class="validate" placeholder ='{{model.name}}' required>
 				<label for="name">Name:</label>
 			</div>
 
 			<div class="input-field col s6">
-				<input name='price' id="name" type="text" class="validate" placeholder ='{{model.price}}'>
+				<input name='price' id="name" type="text" class="validate" placeholder ='{{model.price}}' required>
 				<label for="name">Price:</label>
 			</div>
 			
 			<div class="input-field col s12">
-				<textarea name ='description' id="textarea1" class="materialize-textarea" placeholder ='{{model.description}}'></textarea>
+				<textarea name ='description' id="textarea1" class="materialize-textarea" placeholder ='{{model.description}}' required></textarea>
 				<label for="textarea1">Description:</label>
 			</div>
 	
 			<div class="input-field col s6">
-				<input name='image' id="image-url" type="text" class="validate" placeholder ='{{model.image}}'>
+				<input name='image' id="image-url" type="text" class="validate" placeholder ='{{model.image}}' required>
 				<label for="image-url">IMAGE URL:</label>
 			</div>
 	 

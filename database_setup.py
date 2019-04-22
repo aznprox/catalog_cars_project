@@ -1,4 +1,4 @@
-import sys 
+import sys
 
 from sqlalchemy import Column, ForeignKey, Integer, String
 
@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 
 Base = declarative_base()
+
 
 class User(Base):
     __tablename__ = 'user'
@@ -23,20 +24,19 @@ class Make(Base):
     __tablename__ = 'make'
 
     name = Column(
-    String(80), nullable = False)
+        String(80), nullable=False)
 
     description = Column(
-    String(250))
+        String(250))
 
     image = Column(
-    String(80), nullable = False)
+        String(80), nullable=False)
 
     id = Column(
-    Integer, primary_key = True)
+        Integer, primary_key=True)
 
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
-
 
     @property
     def serialize(self):
@@ -48,33 +48,33 @@ class Make(Base):
             'image': self.image,
         }
 
+
 class Model(Base):
     __tablename__ = 'model'
 
     name = Column(
-    String(80), nullable = False)
+        String(80), nullable=False)
 
     id = Column(
-    Integer, primary_key = True)
+        Integer, primary_key=True)
 
     image = Column(
-    String(250))
+        String(250))
 
     description = Column(
-    String(250))
+        String(250))
 
     price = Column(
-    String(8))
+        String(8))
 
     make_id = Column(
-    Integer, ForeignKey('make.id'))
+        Integer, ForeignKey('make.id'))
 
     make = relationship(Make)
 
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
-    
     @property
     def serialize(self):
 
@@ -85,8 +85,9 @@ class Model(Base):
             'price': self.price,
             'image': self.image,
         }
-    
+
 ###### insert at end of file #####
+
 
 engine = create_engine('sqlite:///carmake.db')
 

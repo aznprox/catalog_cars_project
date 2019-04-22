@@ -6,17 +6,17 @@
 <form action="{{url_for('editMake',make_id = make_id)}}" method = 'post'>
 
         <div class="input-field col s6">
-            <input name='name' id="name" type="text" class="validate">
+            <input name='name' id="name" type="text" class="validate" required>
             <label for="name">Name:</label>
         </div>
         
         <div class="input-field col s12">
-            <textarea name ='description' id="textarea1" class="materialize-textarea"></textarea>
+            <textarea name ='description' id="textarea1" class="materialize-textarea" required></textarea>
             <label for="textarea1">Description:</label>
         </div>
 
         <div class="input-field col s6">
-            <input name='image' id="image-url" type="text" class="validate">
+            <input name='image' id="image-url" type="text" class="validate" required>
             <label for="image-url">IMAGE URL:</label>
         </div>
  
